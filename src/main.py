@@ -28,11 +28,11 @@ PROFILES = {
     },
     "chill_lofi": {
         "genre": "lofi", "mood": "chill", "energy": 0.35, "likes_acoustic": True,
-        "mood_tags": ["cozy", "mellow"],
+        "mood_tags": ["cozy", "mellow"], "instrumentalness": 0.85,
     },
     "deep_intense_rock": {
         "genre": "rock", "mood": "intense", "energy": 0.92, "likes_acoustic": False,
-        "mood_tags": ["aggressive", "rebellious"], "decade": "2000s",
+        "mood_tags": ["aggressive", "rebellious"], "decade": "2000s", "liveness": 0.35,
     },
     # Adversarial / edge-case profiles
     "conflicted_sad_but_hyped": {"genre": "folk", "mood": "sad", "energy": 0.9, "valence": 0.2},

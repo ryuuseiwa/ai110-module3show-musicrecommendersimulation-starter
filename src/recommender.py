@@ -39,6 +39,8 @@ class UserProfile:
     target_popularity: Optional[int] = None
     preferred_decade: Optional[str] = None
     target_valence: Optional[float] = None
+    target_instrumentalness: Optional[float] = None
+    target_liveness: Optional[float] = None
 
     def to_prefs(self) -> Dict:
         """Convert the profile into the user_prefs dict used by score_song."""
@@ -51,6 +53,8 @@ class UserProfile:
             "popularity": self.target_popularity,
             "decade": self.preferred_decade,
             "valence": self.target_valence,
+            "instrumentalness": self.target_instrumentalness,
+            "liveness": self.target_liveness,
         }
 
 @dataclass(frozen=True)
@@ -66,6 +70,8 @@ class ScoringMode:
     popularity: float = 0.5
     decade: float = 0.5
     valence: float = 0.5
+    instrumentalness: float = 0.5
+    liveness: float = 0.25
 
 SCORING_MODES: Dict[str, ScoringMode] = {
     "balanced": ScoringMode(
@@ -169,6 +175,11 @@ def score_song(user_prefs: Dict, song: Dict, mode: str = "balanced") -> Tuple[fl
     if user_prefs.get("popularity") is not None:
         add(w.popularity * _closeness(user_prefs["popularity"], song.get("popularity", 50), 100),
             f"popularity {song.get('popularity', 50)} vs target {user_prefs['popularity']}")
+
+    for feature in ("instrumentalness", "liveness"):
+        if user_prefs.get(feature) is not None:
+            add(getattr(w, feature) * _closeness(user_prefs[feature], song.get(feature, 0.0)),
+                f"{feature} {song.get(feature, 0.0):.2f} vs target {user_prefs[feature]:.2f}")
 
     if user_prefs.get("decade") and song.get("release_decade") == user_prefs["decade"]:
         add(w.decade, f"from the {song['release_decade']}")
